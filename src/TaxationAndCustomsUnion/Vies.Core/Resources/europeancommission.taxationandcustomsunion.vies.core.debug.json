@@ -1,0 +1,7 @@
+{
+  "CheckForUpdateEveryDays": 0,
+  "LastMigrateDateTime": null,
+  "ConnectionStrings": {
+    "DataDbContext": ""
+  }
+}

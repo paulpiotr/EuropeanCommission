@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <!--<TargetFrameworks>netcoreapp3.1;net5.0;netstandard2.1</TargetFrameworks>-->
+    <LangVersion>latest</LangVersion>
+    <Version>5.0.2</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.8.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.8.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.8.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Log4netLogger\Log4netLogger.csproj" />
+    <ProjectReference Include="..\..\..\..\NetAppCommon\NetAppCommon\NetAppCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="SetEnvConfig" BeforeTargets="Compile">
+    <Copy SourceFiles="..\..\..\..\.env\log4net.debug.config" DestinationFiles="log4net.config" OverwriteReadOnlyFiles="true" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+    <Copy SourceFiles="..\..\..\..\.env\log4net.release.config" DestinationFiles="log4net.config" OverwriteReadOnlyFiles="true" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
+    <!--<Copy SourceFiles="Resources\europeancommission.taxationandcustomsunion.vies.core.dbcontext.debug.json" DestinationFiles="europeancommission.taxationandcustomsunion.vies.core.dbcontext.json" OverwriteReadOnlyFiles="true" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+    <Copy SourceFiles="Resources\europeancommission.taxationandcustomsunion.vies.core.dbcontext.release.json" DestinationFiles="europeancommission.taxationandcustomsunion.vies.core.dbcontext.json" OverwriteReadOnlyFiles="true" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />-->
+  </Target>
+
+</Project>
