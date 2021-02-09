@@ -1,7 +1,10 @@
+#region using
+
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Vies.Core.Database.Data;
@@ -9,34 +12,43 @@ using Vies.Core.Database.Models;
 using Vies.Core.Database.Repositories.Interface;
 using Vies.Core.Models;
 
+#endregion
+
 #nullable enable annotations
 
 namespace Vies.Core.Database.Repositories
 {
     public class CheckVatRepository : ICheckVatRepository
     {
-        #region private readonly log4net.ILog _log4Net
-        /// <summary>
-        /// Referencja klasy Log4NetLogger
-        /// Reference to the Log4NetLogger class
-        /// </summary>
-        private readonly log4net.ILog _log4Net = Log4netLogger.Log4netLogger.GetLog4netInstance(MethodBase.GetCurrentMethod()?.DeclaringType);
-        #endregion
-
         #region private readonly AppSettings _appSettings
+
         /// <summary>
-        /// Instancja do klasy ustawień Vies.Core.Database.Models.AppSettings
-        /// Instance to the Vies.Core.Database.Models.AppSettings settings class
+        ///     Instancja do klasy ustawień Vies.Core.Database.Models.AppSettings
+        ///     Instance to the Vies.Core.Database.Models.AppSettings settings class
         /// </summary>
-        private readonly AppSettings _appSettings = new AppSettings();
+        private readonly AppSettings _appSettings = new();
+
         #endregion
 
         #region private readonly ViesCoreDatabaseContext _context
+
         /// <summary>
-        /// Instancja do klasy ustawień Vies.Core.Database.Models.ViesCoreDatabaseContext
-        /// Instance to the Vies.Core.Database.Models.ViesCoreDatabaseContext settings class
+        ///     Instancja do klasy ustawień Vies.Core.Database.Models.ViesCoreDatabaseContext
+        ///     Instance to the Vies.Core.Database.Models.ViesCoreDatabaseContext settings class
         /// </summary>
-        private readonly ViesCoreDatabaseContext _context = null;
+        private readonly ViesCoreDatabaseContext _context;
+
+        #endregion
+
+        #region private readonly log4net.ILog _log4Net
+
+        /// <summary>
+        ///     Referencja klasy Log4NetLogger
+        ///     Reference to the Log4NetLogger class
+        /// </summary>
+        private readonly ILog _log4Net =
+            Log4netLogger.Log4netLogger.GetLog4netInstance(MethodBase.GetCurrentMethod()?.DeclaringType);
+
         #endregion
 
         public CheckVatRepository()
@@ -51,47 +63,41 @@ namespace Vies.Core.Database.Repositories
 
         public CheckVatRepository(IServiceProvider serviceProvider)
         {
-            IServiceScope serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            ViesCoreDatabaseContext context = serviceScope.ServiceProvider.GetService<ViesCoreDatabaseContext>();
-            _context = context;
-            //#if DEBUG
-            //            _log4Net.Debug($" { _context.Database.GetConnectionString() }, { _context.Database.CanConnect() }");
-            //#endif
+            try
+            {
+                IServiceScope serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                ViesCoreDatabaseContext context = serviceScope.ServiceProvider.GetService<ViesCoreDatabaseContext>();
+                if (null != context)
+                {
+                    _context = context;
+                }
+            }
+            catch (Exception e)
+            {
+                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+            }
         }
 
         public CheckVatRepository(IServiceScopeFactory serviceScopeFactory)
         {
-            IServiceScope serviceScope = serviceScopeFactory.CreateScope();
-            ViesCoreDatabaseContext context = serviceScope.ServiceProvider.GetService<ViesCoreDatabaseContext>();
-            _context = context;
-            //#if DEBUG
-            //            _log4Net.Debug($" { _context.Database.GetConnectionString() }, { _context.Database.CanConnect() }");
-            //#endif
+            try
+            {
+                IServiceScope serviceScope = serviceScopeFactory.CreateScope();
+                ViesCoreDatabaseContext context = serviceScope.ServiceProvider.GetService<ViesCoreDatabaseContext>();
+                if (null != context)
+                {
+                    _context = context;
+                }
+            }
+            catch (Exception e)
+            {
+                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+            }
         }
 
-        public static CheckVatRepository GetInstance()
-        {
-            return new CheckVatRepository();
-        }
-
-        public static CheckVatRepository GetInstance(ViesCoreDatabaseContext context)
-        {
-            return new CheckVatRepository(context);
-        }
-
-        public static CheckVatRepository GetInstance(IServiceProvider serviceProvider)
-        {
-            return new CheckVatRepository(serviceProvider);
-        }
-
-        public static CheckVatRepository GetInstance(IServiceScopeFactory serviceScopeFactory)
-        {
-            return new CheckVatRepository(serviceScopeFactory);
-        }
-
-        public async Task<CheckVat> FindByCountryCodeAndVatNumberAsync(string countryCode, string vatNumber, int cacheLifeTime = 0)
-        {
-            return await Task.Run(() =>
+        public async Task<CheckVat?> FindByCountryCodeAndVatNumberAsync(string countryCode, string vatNumber,
+            int cacheLifeTime = 0) =>
+            await Task.Run(() =>
             {
                 try
                 {
@@ -101,17 +107,19 @@ namespace Vies.Core.Database.Repositories
                 {
                     _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
                 }
+
                 return null;
             });
-        }
 
-        public CheckVat FindByCountryCodeAndVatNumber(string countryCode, string vatNumber, int cacheLifeTime = 0)
+        public CheckVat? FindByCountryCodeAndVatNumber(string countryCode, string vatNumber, int cacheLifeTime = 0)
         {
             try
             {
                 CheckVat checkVat = cacheLifeTime > 0
-                    ? _context.CheckVat.Where(w => w.CountryCode == countryCode && w.VatNumber == vatNumber && w.DateOfModification >= DateTime.Now.AddSeconds((double)cacheLifeTime * -1))/*.FromCache(_context.GetMemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(cacheLifeTime)), countryCode, vatNumber, cacheLifeTime.ToString())*/.FirstOrDefault()
-                    : _context.CheckVat.Where(w => w.CountryCode == countryCode && w.VatNumber == vatNumber).FirstOrDefault();
+                    ? _context.CheckVat.FirstOrDefault(w =>
+                        w.CountryCode == countryCode && w.VatNumber == vatNumber && w.DateOfModification >=
+                        DateTime.Now.AddSeconds((double)cacheLifeTime * -1))
+                    : _context.CheckVat.FirstOrDefault(w => w.CountryCode == countryCode && w.VatNumber == vatNumber);
                 if (null != checkVat)
                 {
                     return checkVat;
@@ -121,6 +129,7 @@ namespace Vies.Core.Database.Repositories
             {
                 _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
             }
+
             return null;
         }
 
@@ -128,9 +137,13 @@ namespace Vies.Core.Database.Repositories
         {
             try
             {
-                if (_context.CheckVat.Where(w => null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber && null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode).Any())
+                if (_context.CheckVat.Any(w =>
+                    null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber && null != checkVat.CountryCode &&
+                    w.CountryCode == checkVat.CountryCode))
                 {
-                    CheckVat checkVatWhere = _context.CheckVat.Where(w => null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber && null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode).FirstOrDefault();
+                    CheckVat checkVatWhere = _context.CheckVat.FirstOrDefault(w => null != checkVat.VatNumber &&
+                        w.VatNumber == checkVat.VatNumber &&
+                        null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode);
                     if (null != checkVatWhere)
                     {
                         checkVat.Id = checkVatWhere.Id;
@@ -138,43 +151,61 @@ namespace Vies.Core.Database.Repositories
                         _context.Entry(checkVatWhere).State = EntityState.Detached;
                     }
                 }
+
                 checkVat.DateOfModification = DateTime.Now;
-                _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString() ? EntityState.Modified : EntityState.Added;
+                _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString()
+                    ? EntityState.Modified
+                    : EntityState.Added;
                 _context.SaveChanges();
             }
             catch (Exception e)
             {
                 _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
             }
+
             return checkVat;
         }
 
-        public async Task<CheckVat> SaveAsync(CheckVat checkVat)
-        {
-            return await Task.Run(async () =>
+        public async Task<CheckVat> SaveAsync(CheckVat checkVat) =>
+            await Task.Run(async () =>
             {
                 try
                 {
-                    if (await _context.CheckVat.Where(w => null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber && null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode).AnyAsync())
+                    if (await _context.CheckVat.Where(w =>
+                        null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber &&
+                        null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode).AnyAsync())
                     {
-                        CheckVat checkVatWhere = await _context.CheckVat.Where(w => null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber && null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode).FirstOrDefaultAsync();
+                        CheckVat checkVatWhere = await _context.CheckVat.Where(w =>
+                                null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber &&
+                                null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode)
+                            .FirstOrDefaultAsync();
                         if (null != checkVatWhere)
                         {
                             checkVat.Id = checkVatWhere.Id;
-                            //checkVat.DateOfCreate = checkVatWhere.DateOfCreate;
                             _context.Entry(checkVatWhere).State = EntityState.Detached;
                         }
                     }
-                    //checkVat.DateOfModification = DateTime.Now;
-                    _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString() ? EntityState.Modified : EntityState.Added;
+
+                    _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString()
+                        ? EntityState.Modified
+                        : EntityState.Added;
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
                     _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
                 }
+
                 return checkVat;
             });
-        }
+
+        public static CheckVatRepository GetInstance() => new();
+
+        public static CheckVatRepository GetInstance(ViesCoreDatabaseContext context) => new(context);
+
+        public static CheckVatRepository GetInstance(IServiceProvider serviceProvider) => new(serviceProvider);
+
+        public static CheckVatRepository GetInstance(IServiceScopeFactory serviceScopeFactory) =>
+            new(serviceScopeFactory);
     }
 }

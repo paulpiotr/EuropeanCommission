@@ -1,6 +1,10 @@
+#region using
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vies.Core.Models;
+
+#endregion
 
 namespace Vies.Core.Database.Data.EntityTypeConfiguration
 {
@@ -10,7 +14,7 @@ namespace Vies.Core.Database.Data.EntityTypeConfiguration
         {
             builder.HasIndex(e => e.Id)
                 .HasDatabaseName("IX_CheckVatId")
-                .IsUnique(true);
+                .IsUnique();
             builder.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
 
             builder.HasIndex(e => e.UniqueIdentifierOfTheLoggedInUser)

@@ -1,26 +1,97 @@
+#region using
+
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
+using NetAppCommon;
+using NetAppCommon.Helpers.Object;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace Vies.Core.Models
 {
     public class BaseEntity : INotifyPropertyChanged
     {
+        #region public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        ///     PropertyChangedEventHandler PropertyChanged
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region public void SetId(string s)
+
+        /// <summary>
+        ///     Ustaw identyfikator z dowolnego unikalnego ciągu znaków s
+        ///     Set the identifier from any unique string s
+        /// </summary>
+        /// <param name="s">
+        ///     Unikalny ciąg znaków s jako string
+        ///     Unique string s as string
+        /// </param>
+        public void SetId(string s)
+        {
+            Id = new Guid();
+            Id = ObjectHelper.GuidFromString(s);
+        }
+
+        #endregion
+
+        #region public void SetUniqueIdentifierOfTheLoggedInUser()
+
+        /// <summary>
+        ///     Ustaw jednoznaczny identyfikator zalogowanego użytkownika
+        ///     Set a unique identifier for the logged in user
+        /// </summary>
+        public void SetUniqueIdentifierOfTheLoggedInUser() => UniqueIdentifierOfTheLoggedInUser =
+            HttpContextAccessor.AppContext.GetCurrentUserIdentityName();
+
+        #endregion
+
+        #region protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
+
+        /// <summary>
+        ///     protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
+        /// </summary>
+        /// <param name="args"></param>
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args) => PropertyChanged?.Invoke(this, args);
+
+        #endregion
+
+        #region protected void OnPropertyChanged(string propertyName)
+
+        /// <summary>
+        ///     protected void OnPropertyChanged(string propertyName)
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected void OnPropertyChanged(string propertyName) =>
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        //public static implicit operator Task<object>(CheckVat v)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        #endregion
+
         #region private Guid _id; public Guid Id
 
         private Guid _id;
 
         /// <summary>
-        /// Guid Id identyfikator klucz główny
-        /// Guid Id identifier master key
+        ///     Guid Id identyfikator klucz główny
+        ///     Guid Id identifier master key
         /// </summary>
         [XmlIgnore]
         [Key]
         [JsonProperty(nameof(Id))]
-        [Display(Name = "Identyfikator w bazie danych", Prompt = "Wpisz identyfikator", Description = "Identyfikator klucz główny")]
+        [Display(Name = "Identyfikator w bazie danych", Prompt = "Wpisz identyfikator",
+            Description = "Identyfikator klucz główny")]
         public Guid Id
         {
             get => _id;
@@ -33,22 +104,7 @@ namespace Vies.Core.Models
                 }
             }
         }
-        #endregion
 
-        #region public void SetId(string s)
-        /// <summary>
-        /// Ustaw identyfikator z dowolnego unikalnego ciągu znaków s
-        /// Set the identifier from any unique string s
-        /// </summary>
-        /// <param name="s">
-        /// Unikalny ciąg znaków s jako string
-        /// Unique string s as string
-        /// </param>
-        public void SetId(string s)
-        {
-            Id = new Guid();
-            Id = NetAppCommon.Helpers.Object.ObjectHelper.GuidFromString(s);
-        }
         #endregion
 
         #region private string _uniqueIdentifierOfTheLoggedInUser; public string UniqueIdentifierOfTheLoggedInUser
@@ -56,13 +112,15 @@ namespace Vies.Core.Models
         private string _uniqueIdentifierOfTheLoggedInUser;
 
         /// <summary>
-        /// Jednoznaczny identyfikator zalogowanego użytkownika
-        /// Unique identifier of the logged in user
+        ///     Jednoznaczny identyfikator zalogowanego użytkownika
+        ///     Unique identifier of the logged in user
         /// </summary>
         [XmlIgnore]
         [JsonProperty(nameof(UniqueIdentifierOfTheLoggedInUser))]
         [Column(nameof(UniqueIdentifierOfTheLoggedInUser), TypeName = "varchar(512)")]
-        [Display(Name = "Identyfikator zalogowanego użytkownika", Prompt = "Wybierz identyfikator zalogowanego użytkownika", Description = "Identyfikator zalogowanego użytkownika")]
+        [Display(Name = "Identyfikator zalogowanego użytkownika",
+            Prompt = "Wybierz identyfikator zalogowanego użytkownika",
+            Description = "Identyfikator zalogowanego użytkownika")]
         [StringLength(512)]
         [Required]
         public string UniqueIdentifierOfTheLoggedInUser
@@ -77,17 +135,7 @@ namespace Vies.Core.Models
                 }
             }
         }
-        #endregion
 
-        #region public void SetUniqueIdentifierOfTheLoggedInUser()
-        /// <summary>
-        /// Ustaw jednoznaczny identyfikator zalogowanego użytkownika
-        /// Set a unique identifier for the logged in user
-        /// </summary>
-        public void SetUniqueIdentifierOfTheLoggedInUser()
-        {
-            UniqueIdentifierOfTheLoggedInUser = NetAppCommon.HttpContextAccessor.AppContext.GetCurrentUserIdentityName();
-        }
         #endregion
 
         #region private DateTime _dateOfCreate; public DateTime DateOfCreate
@@ -95,14 +143,15 @@ namespace Vies.Core.Models
         private DateTime _dateOfCreate;
 
         /// <summary>
-        /// Data utworzenia
-        /// Date of create
+        ///     Data utworzenia
+        ///     Date of create
         /// </summary>
         [XmlIgnore]
         [JsonProperty(nameof(DateOfCreate))]
         [Column(nameof(DateOfCreate), TypeName = "datetime")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Display(Name = "Data Utworzenia", Prompt = "Wpisz lub wybierz datę utworzenia", Description = "Data utworzenia")]
+        [Display(Name = "Data Utworzenia", Prompt = "Wpisz lub wybierz datę utworzenia",
+            Description = "Data utworzenia")]
         [DataType(DataType.Date)]
         public DateTime DateOfCreate
         {
@@ -116,6 +165,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private DateTime? _dateOfModification; public DateTime? DateOfModification
@@ -123,13 +173,14 @@ namespace Vies.Core.Models
         private DateTime? _dateOfModification;
 
         /// <summary>
-        /// Data modyfikacji
-        /// Date of modification
+        ///     Data modyfikacji
+        ///     Date of modification
         /// </summary>
         [XmlIgnore]
         [JsonProperty(nameof(DateOfModification))]
         [Column(nameof(DateOfModification), TypeName = "datetime")]
-        [Display(Name = "Data Modyfikacji", Prompt = "Wpisz lub wybierz datę modyfikacji", Description = "Data modyfikacji")]
+        [Display(Name = "Data Modyfikacji", Prompt = "Wpisz lub wybierz datę modyfikacji",
+            Description = "Data modyfikacji")]
         [DataType(DataType.Date)]
         public DateTime? DateOfModification
         {
@@ -143,40 +194,7 @@ namespace Vies.Core.Models
                 }
             }
         }
-        #endregion
 
-        #region public event PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// PropertyChangedEventHandler PropertyChanged
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
-
-        #region protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
-        /// <summary>
-        /// protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
-        /// </summary>
-        /// <param name="args"></param>
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
-        {
-            PropertyChanged?.Invoke(this, args);
-        }
-        #endregion
-
-        #region protected void OnPropertyChanged(string propertyName)
-        /// <summary>
-        /// protected void OnPropertyChanged(string propertyName)
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected void OnPropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        //public static implicit operator Task<object>(CheckVat v)
-        //{
-        //    throw new NotImplementedException();
-        //}
         #endregion
     }
 }

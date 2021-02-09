@@ -1,3 +1,5 @@
+#region using
+
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -5,21 +7,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Vies.Core.Models
 {
-    [Serializable, XmlRoot("checkVatApproxResponse")]
+    [Serializable]
+    [XmlRoot("checkVatApproxResponse")]
     [Table("CheckVatApprox", Schema = "etvc")]
-    public partial class CheckVatApprox : BaseEntity, INotifyPropertyChanged
+    public class CheckVatApprox : BaseEntity, INotifyPropertyChanged
     {
         #region public CheckVat()
+
         /// <summary>
-        /// Konstruktor
-        /// Construktor
+        ///     Konstruktor
+        ///     Construktor
         /// </summary>
         public CheckVatApprox()
         {
             SetUniqueIdentifierOfTheLoggedInUser();
         }
+
         #endregion
 
         #region private string _countryCode; public string CountryCode
@@ -29,7 +36,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "countryCode")]
         [JsonProperty(nameof(CountryCode))]
         [Column(nameof(CountryCode), TypeName = "varchar(8)")]
-        [Display(Name = "Atrybut CountryCode", Prompt = "Wpisz atrybut CountryCode", Description = "Atrybut CountryCode")]
+        [Display(Name = "Atrybut CountryCode", Prompt = "Wpisz atrybut CountryCode",
+            Description = "Atrybut CountryCode")]
         [Required]
         [StringLength(8)]
         public string CountryCode
@@ -44,6 +52,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _vatNumber; public string VatNumber
@@ -68,6 +77,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _requestDate; public string RequestDate
@@ -77,7 +87,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "requestDate")]
         [JsonProperty(nameof(RequestDate))]
         [Column(nameof(RequestDate), TypeName = "datetime")]
-        [Display(Name = "Atrybut RequestDate", Prompt = "Wpisz atrybut RequestDate", Description = "Atrybut RequestDate")]
+        [Display(Name = "Atrybut RequestDate", Prompt = "Wpisz atrybut RequestDate",
+            Description = "Atrybut RequestDate")]
         [Required]
         [DataType(DataType.Date)]
 
@@ -93,6 +104,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _valid; public string Valid
@@ -116,6 +128,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _traderName; public string TraderName
@@ -140,6 +153,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _traderCompanyType; public string TraderCompanyType
@@ -147,12 +161,13 @@ namespace Vies.Core.Models
         private string _traderCompanyType;
 
         /// <summary>
-        /// [A-Z]{2}\-[1-9][0-9]?
+        ///     [A-Z]{2}\-[1-9][0-9]?
         /// </summary>
         [XmlElement(ElementName = "traderCompanyType")]
         [JsonProperty(nameof(TraderCompanyType))]
         [Column(nameof(TraderCompanyType), TypeName = "varchar(16)")]
-        [Display(Name = "Atrybut TraderCompanyType", Prompt = "Wpisz atrybut TraderCompanyType", Description = "Atrybut TraderCompanyType")]
+        [Display(Name = "Atrybut TraderCompanyType", Prompt = "Wpisz atrybut TraderCompanyType",
+            Description = "Atrybut TraderCompanyType")]
         [Required]
         [StringLength(256)]
         public string TraderCompanyType
@@ -167,6 +182,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _traderAddress; public string TraderAddress
@@ -176,7 +192,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderAddress")]
         [JsonProperty(nameof(TraderAddress))]
         [Column(nameof(TraderAddress), TypeName = "varchar(256)")]
-        [Display(Name = "Atrybut TraderAddress", Prompt = "Wpisz atrybut TraderAddress", Description = "Atrybut TraderAddress")]
+        [Display(Name = "Atrybut TraderAddress", Prompt = "Wpisz atrybut TraderAddress",
+            Description = "Atrybut TraderAddress")]
         [Required]
         [StringLength(256)]
         public string TraderAddress
@@ -191,6 +208,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _traderStreet; public string TraderStreet
@@ -200,7 +218,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderStreet")]
         [JsonProperty(nameof(TraderStreet))]
         [Column(nameof(TraderStreet), TypeName = "varchar(64)")]
-        [Display(Name = "Atrybut TraderStreet", Prompt = "Wpisz atrybut TraderStreet", Description = "Atrybut TraderStreet")]
+        [Display(Name = "Atrybut TraderStreet", Prompt = "Wpisz atrybut TraderStreet",
+            Description = "Atrybut TraderStreet")]
         [StringLength(64)]
         public string TraderStreet
         {
@@ -214,6 +233,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _traderPostcode; public string TraderPostcode
@@ -223,7 +243,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderPostcode")]
         [JsonProperty(nameof(TraderPostcode))]
         [Column(nameof(TraderPostcode), TypeName = "varchar(32)")]
-        [Display(Name = "Atrybut TraderPostcode", Prompt = "Wpisz atrybut TraderPostcode", Description = "Atrybut TraderPostcode")]
+        [Display(Name = "Atrybut TraderPostcode", Prompt = "Wpisz atrybut TraderPostcode",
+            Description = "Atrybut TraderPostcode")]
         [StringLength(32)]
         public string TraderPostcode
         {
@@ -237,6 +258,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _traderCity; public string TraderCity
@@ -260,6 +282,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private ushort _traderNameMatch; public ushort TraderNameMatch
@@ -269,7 +292,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderNameMatch")]
         [JsonProperty(nameof(TraderNameMatch))]
         [Column(nameof(TraderNameMatch), TypeName = "smallint")]
-        [Display(Name = "Atrybut TraderNameMatch", Prompt = "Wpisz atrybut TraderNameMatch", Description = "Atrybut TraderNameMatch")]
+        [Display(Name = "Atrybut TraderNameMatch", Prompt = "Wpisz atrybut TraderNameMatch",
+            Description = "Atrybut TraderNameMatch")]
         [Range(ushort.MinValue, ushort.MaxValue)]
         public ushort TraderNameMatch
         {
@@ -283,6 +307,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private ushort _traderCompanyTypeMatch; public ushort TraderCompanyTypeMatch
@@ -292,7 +317,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderCompanyTypeMatch")]
         [JsonProperty(nameof(TraderCompanyTypeMatch))]
         [Column(nameof(TraderCompanyTypeMatch), TypeName = "smallint")]
-        [Display(Name = "Atrybut TraderCompanyTypeMatch", Prompt = "Wpisz atrybut TraderCompanyTypeMatch", Description = "Atrybut TraderCompanyTypeMatch")]
+        [Display(Name = "Atrybut TraderCompanyTypeMatch", Prompt = "Wpisz atrybut TraderCompanyTypeMatch",
+            Description = "Atrybut TraderCompanyTypeMatch")]
         [Range(ushort.MinValue, ushort.MaxValue)]
         public ushort TraderCompanyTypeMatch
         {
@@ -306,6 +332,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private ushort _traderStreetMatch; public ushort TraderStreetMatch
@@ -315,7 +342,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderStreetMatch")]
         [JsonProperty(nameof(TraderStreetMatch))]
         [Column(nameof(TraderStreetMatch), TypeName = "smallint")]
-        [Display(Name = "Atrybut TraderStreetMatch", Prompt = "Wpisz atrybut TraderStreetMatch", Description = "Atrybut TraderStreetMatch")]
+        [Display(Name = "Atrybut TraderStreetMatch", Prompt = "Wpisz atrybut TraderStreetMatch",
+            Description = "Atrybut TraderStreetMatch")]
         [Range(ushort.MinValue, ushort.MaxValue)]
         public ushort TraderStreetMatch
         {
@@ -329,6 +357,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private ushort _traderPostcodeMatch; public ushort TraderPostcodeMatch
@@ -338,7 +367,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderPostcodeMatch")]
         [JsonProperty(nameof(TraderPostcodeMatch))]
         [Column(nameof(TraderPostcodeMatch), TypeName = "smallint")]
-        [Display(Name = "Atrybut TraderPostcodeMatch", Prompt = "Wpisz atrybut TraderPostcodeMatch", Description = "Atrybut TraderPostcodeMatch")]
+        [Display(Name = "Atrybut TraderPostcodeMatch", Prompt = "Wpisz atrybut TraderPostcodeMatch",
+            Description = "Atrybut TraderPostcodeMatch")]
         [Range(ushort.MinValue, ushort.MaxValue)]
         public ushort TraderPostcodeMatch
         {
@@ -352,6 +382,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private ushort _traderCityMatch; public ushort TraderCityMatch
@@ -361,7 +392,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "traderCityMatch")]
         [JsonProperty(nameof(TraderCityMatch))]
         [Column(nameof(TraderCityMatch), TypeName = "smallint")]
-        [Display(Name = "Atrybut TraderCityMatch", Prompt = "Wpisz atrybut TraderCityMatch", Description = "Atrybut TraderCityMatch")]
+        [Display(Name = "Atrybut TraderCityMatch", Prompt = "Wpisz atrybut TraderCityMatch",
+            Description = "Atrybut TraderCityMatch")]
         [Range(ushort.MinValue, ushort.MaxValue)]
         public ushort TraderCityMatch
         {
@@ -375,6 +407,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _requestIdentifier; public string RequestIdentifier
@@ -384,7 +417,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "requestIdentifier")]
         [JsonProperty(nameof(RequestIdentifier))]
         [Column(nameof(RequestIdentifier), TypeName = "varchar(16)")]
-        [Display(Name = "Atrybut RequestIdentifier", Prompt = "Wpisz atrybut RequestIdentifier", Description = "Atrybut RequestIdentifier")]
+        [Display(Name = "Atrybut RequestIdentifier", Prompt = "Wpisz atrybut RequestIdentifier",
+            Description = "Atrybut RequestIdentifier")]
         [Required]
         [StringLength(16)]
         [MinLength(16)]
@@ -401,6 +435,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
     }
 }

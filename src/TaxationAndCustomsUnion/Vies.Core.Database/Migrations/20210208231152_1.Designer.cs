@@ -10,8 +10,8 @@ using Vies.Core.Database.Data;
 namespace Vies.Core.Database.Migrations
 {
     [DbContext(typeof(ViesCoreDatabaseContext))]
-    [Migration("20210114120542_3")]
-    partial class _3
+    [Migration("20210208231152_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

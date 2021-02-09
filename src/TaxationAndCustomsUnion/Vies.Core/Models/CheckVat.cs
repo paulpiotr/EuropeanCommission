@@ -1,3 +1,5 @@
+#region using
+
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -5,21 +7,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
+#endregion
+
 namespace Vies.Core.Models
 {
-    [Serializable, XmlRoot("checkVatResponse")]
+    [Serializable]
+    [XmlRoot("checkVatResponse")]
     [Table("CheckVat", Schema = "etvc")]
-    public partial class CheckVat : BaseEntity, INotifyPropertyChanged
+    public class CheckVat : BaseEntity, INotifyPropertyChanged
     {
         #region public CheckVat()
+
         /// <summary>
-        /// Konstruktor
-        /// Construktor
+        ///     Konstruktor
+        ///     Construktor
         /// </summary>
         public CheckVat()
         {
             SetUniqueIdentifierOfTheLoggedInUser();
         }
+
+        #endregion
+
+        #region private new void OnPropertyChanged(string propertyName)
+
+        /// <summary>
+        ///     private new void OnPropertyChanged(string propertyName)
+        /// </summary>
+        /// <param name="propertyName"></param>
+        private new void OnPropertyChanged(string propertyName) =>
+            //OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            base.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
         #endregion
 
         #region private string _countryCode; public string CountryCode
@@ -29,7 +48,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "countryCode")]
         [JsonProperty(nameof(CountryCode))]
         [Column(nameof(CountryCode), TypeName = "varchar(8)")]
-        [Display(Name = "Atrybut CountryCode", Prompt = "Wpisz atrybut CountryCode", Description = "Atrybut CountryCode")]
+        [Display(Name = "Atrybut CountryCode", Prompt = "Wpisz atrybut CountryCode",
+            Description = "Atrybut CountryCode")]
         [Required]
         [StringLength(8)]
         public string CountryCode
@@ -44,6 +64,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _vatNumber; public string VatNumber
@@ -68,6 +89,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _requestDate; public string RequestDate
@@ -77,7 +99,8 @@ namespace Vies.Core.Models
         [XmlElement(ElementName = "requestDate")]
         [JsonProperty(nameof(RequestDate))]
         [Column(nameof(RequestDate), TypeName = "datetime")]
-        [Display(Name = "Atrybut RequestDate", Prompt = "Wpisz atrybut RequestDate", Description = "Atrybut RequestDate")]
+        [Display(Name = "Atrybut RequestDate", Prompt = "Wpisz atrybut RequestDate",
+            Description = "Atrybut RequestDate")]
         [Required]
         [DataType(DataType.Date)]
 
@@ -93,9 +116,11 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _valid; public string Valid
+
         private bool _valid;
 
         [XmlElement(ElementName = "valid")]
@@ -116,6 +141,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _name; public string Name
@@ -140,6 +166,7 @@ namespace Vies.Core.Models
                 }
             }
         }
+
         #endregion
 
         #region private string _address; public string Address
@@ -164,18 +191,7 @@ namespace Vies.Core.Models
                 }
             }
         }
-        #endregion
 
-        #region private new void OnPropertyChanged(string propertyName)
-        /// <summary>
-        /// private new void OnPropertyChanged(string propertyName)
-        /// </summary>
-        /// <param name="propertyName"></param>
-        private new void OnPropertyChanged(string propertyName)
-        {
-            //OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-            base.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
         #endregion
     }
 }

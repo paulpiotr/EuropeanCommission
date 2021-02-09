@@ -1,13 +1,20 @@
+#region using
+
 using System.Threading.Tasks;
 using Vies.Core.Models;
+
+#endregion
+
+#nullable enable annotations
 
 namespace Vies.Core.Database.Repositories.Interface
 {
     public interface ICheckVatRepository
     {
-        public CheckVat FindByCountryCodeAndVatNumber(string countryCode, string vatNumber, int cacheLifeTime = 0);
+        public CheckVat? FindByCountryCodeAndVatNumber(string countryCode, string vatNumber, int cacheLifeTime = 0);
 
-        public Task<CheckVat> FindByCountryCodeAndVatNumberAsync(string countryCode, string vatNumber, int cacheLifeTime = 0);
+        public Task<CheckVat?> FindByCountryCodeAndVatNumberAsync(string countryCode, string vatNumber,
+            int cacheLifeTime = 0);
 
         public CheckVat Save(CheckVat checkVat);
 
