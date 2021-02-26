@@ -35,12 +35,11 @@ namespace Vies.Core.Database.Models
                 var memoryCacheProvider = MemoryCacheProvider.GetInstance();
                 var declaringTypeFullName = MethodBase.GetCurrentMethod()?.DeclaringType?.FullName;
                 var filePathKey = $"{declaringTypeFullName}{@".FilePath"}";
-                object filePath = memoryCacheProvider.Get(filePathKey);
+                var filePath = (object)memoryCacheProvider.Get(filePathKey);
                 if (null == filePath)
                 {
                     AppSettingsRepository?.MergeAndCopyToUserDirectory(this);
                     memoryCacheProvider.Put(filePathKey, FilePath, TimeSpan.FromDays(1));
-                    //Console.WriteLine($"{declaringTypeFullName} {filePathKey} {FilePath}");
                 }
 
                 if (null != FileName && null != UserProfileDirectory)
@@ -50,8 +49,8 @@ namespace Vies.Core.Database.Models
 
                 var useGlobalDatabaseConnectionSettingsKey =
                     $"{declaringTypeFullName}{@".UseGlobalDatabaseConnectionSettings"}";
-                object useGlobalDatabaseConnectionSettings =
-                    memoryCacheProvider.Get(useGlobalDatabaseConnectionSettingsKey);
+                var useGlobalDatabaseConnectionSettings =
+                    (object)memoryCacheProvider.Get(useGlobalDatabaseConnectionSettingsKey);
                 if (null == useGlobalDatabaseConnectionSettings)
                 {
                     memoryCacheProvider.Put(useGlobalDatabaseConnectionSettingsKey, UseGlobalDatabaseConnectionSettings,
