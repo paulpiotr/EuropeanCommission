@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Reflection;
 using log4net;
-using NetAppCommon.AppSettings.Models;
 using NetAppCommon.AppSettings.Models.Base;
 using NetAppCommon.Helpers.Cache;
 
@@ -22,7 +21,7 @@ namespace Vies.Core.Database.Models
     ///     The settings model class of the
     /// </summary>
     [NotMapped]
-    public sealed class AppSettings : AppSettingsBaseModel
+    public sealed class AppSettings : AppSettingsWithDatabase
     {
         // Important !!!
 
@@ -57,7 +56,7 @@ namespace Vies.Core.Database.Models
                         TimeSpan.FromDays(1));
                     if (UseGlobalDatabaseConnectionSettings)
                     {
-                        var appSettingsModel = new AppSettingsModel();
+                        var appSettingsModel = new NetAppCommon.AppSettings.Models.AppSettings();
                         ConnectionString = appSettingsModel.ConnectionString;
                         AppSettingsRepository?.MergeAndSave(this);
                     }
@@ -106,7 +105,7 @@ namespace Vies.Core.Database.Models
         private const string Filename = "europeancommission.taxationandcustomsunion.vies.core.dbcontext.json";
 #endif
 
-        private new string? _fileName = Filename;
+        private string? _fileName = Filename;
 
         public override string? FileName
         {
@@ -131,7 +130,7 @@ namespace Vies.Core.Database.Models
         private const string Connectionstringname = "ViesCoreDatabaseContext";
 #endif
 
-        private new string _connectionStringName = Connectionstringname;
+        private string _connectionStringName = Connectionstringname;
 
         public override string ConnectionStringName
         {
@@ -147,49 +146,6 @@ namespace Vies.Core.Database.Models
 
         #endregion
 
-        //#region private string _requesterCountryCode; public string RequesterCountryCode
-
-        //private string? _requesterCountryCode;
-
-        //[JsonProperty(nameof(RequesterCountryCode))]
-        //[Display(Name = "Domyślny kod kraju wnioskodawcy", Prompt = "Wpisz lub wybierz domyślny kod kraju wnioskodawcy", Description = "Domyślny kod kraju wnioskodawcy")]
-        //[Required]
-        //public string? RequesterCountryCode
-        //{
-        //    get =>
-        //        _requesterCountryCode ??= AppSettingsRepository?.GetValue<string>(this, nameof(RequesterCountryCode));
-        //    set
-        //    {
-        //        if (value != _requesterCountryCode)
-        //        {
-        //            _requesterCountryCode = value;
-        //            OnPropertyChanged(nameof(RequesterCountryCode));
-        //        }
-        //    }
-        //}
-        //#endregion
-
-        //#region private string _requesterVatNumber; public string RequesterVatNumber
-
-        //private string? _requesterVatNumber;
-
-        //[JsonProperty(nameof(RequesterVatNumber))]
-        //[Display(Name = "Domyślny numer VAT wnioskodawcy", Prompt = "Wpisz domyślny numer VAT wnioskodawcy", Description = "Domyślny numer VAT wnioskodawcy")]
-        //[Required]
-        //public string? RequesterVatNumber
-        //{
-        //    get =>
-        //        _requesterVatNumber ??= AppSettingsRepository?.GetValue<string>(this, nameof(RequesterVatNumber));
-        //    set
-        //    {
-        //        if (value != _requesterVatNumber)
-        //        {
-        //            _requesterVatNumber = value;
-        //            OnPropertyChanged(nameof(RequesterVatNumber));
-        //        }
-        //    }
-        //}
-        //#endregion
     }
 
     #endregion

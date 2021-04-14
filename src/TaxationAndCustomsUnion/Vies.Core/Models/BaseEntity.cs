@@ -72,11 +72,6 @@ namespace Vies.Core.Models
         protected void OnPropertyChanged(string propertyName) =>
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
-        //public static implicit operator Task<object>(CheckVat v)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         #endregion
 
         #region private Guid _id; public Guid Id

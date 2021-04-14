@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\PortalApiGus\ApiRegon\src\PortalApiGus.ApiRegon.Core\PortalApiGus.ApiRegon.Core.csproj" />
     <ProjectReference Include="..\Vies.Core\Vies.Core.csproj" />
   </ItemGroup>
 
