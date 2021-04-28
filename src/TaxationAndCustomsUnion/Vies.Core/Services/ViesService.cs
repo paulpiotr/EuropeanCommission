@@ -40,9 +40,9 @@ namespace Vies.Core.Services
                 var textWriter = new StringWriter();
                 xmlSerializer.Serialize(textWriter, checkVatResponse);
                 CheckVat checkVat = XmlHelper.DeserializeXmlFromString<CheckVat>(textWriter.ToString());
-#if DEBUG
-                _log4Net.Debug(JsonConvert.SerializeObject(checkVat));
-#endif
+//#if DEBUG
+//                _log4Net.Debug(JsonConvert.SerializeObject(checkVat));
+//#endif
                 return checkVat;
             }
             catch (Exception e)
@@ -86,10 +86,10 @@ namespace Vies.Core.Services
                 xmlSerializer.Serialize(textWriter, checkVatApproxResponse);
                 CheckVatApprox checkVatApprox =
                     XmlHelper.DeserializeXmlFromString<CheckVatApprox>(textWriter.ToString());
-#if DEBUG
-                _log4Net.Debug(JsonConvert.SerializeObject(checkVatApprox));
-                _log4Net.Debug(JsonConvert.SerializeObject(checkVatApproxResponse));
-#endif
+//#if DEBUG
+//                _log4Net.Debug(JsonConvert.SerializeObject(checkVatApprox));
+//                _log4Net.Debug(JsonConvert.SerializeObject(checkVatApproxResponse));
+//#endif
                 return checkVatApprox;
             }
             catch (Exception e)
