@@ -177,7 +177,6 @@ namespace Vies.Core.Models
         [JsonProperty(nameof(Address))]
         [Column(nameof(Address), TypeName = "varchar(256)")]
         [Display(Name = "Atrybut Address", Prompt = "Wpisz atrybut Address", Description = "Atrybut Address")]
-        [Required]
         [StringLength(256)]
         public string Address
         {

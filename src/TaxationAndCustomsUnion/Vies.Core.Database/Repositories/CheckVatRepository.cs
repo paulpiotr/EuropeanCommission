@@ -74,7 +74,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
         }
 
@@ -91,7 +95,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
         }
 
@@ -105,7 +113,11 @@ namespace Vies.Core.Database.Repositories
                 }
                 catch (Exception e)
                 {
-                    _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                    _log4Net.Error(e);
+                    if (null != e.InnerException)
+                    {
+                        _log4Net.Error(e.InnerException);
+                    }
                 }
 
                 return null;
@@ -127,7 +139,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
 
             return null;
@@ -160,7 +176,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
 
             return checkVat;
@@ -189,11 +209,16 @@ namespace Vies.Core.Database.Repositories
                     _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString()
                         ? EntityState.Modified
                         : EntityState.Added;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
-                    _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                    _log4Net.Error(e);
+                    if (null != e.InnerException)
+                    {
+                        _log4Net.Error(e.InnerException);
+                    }
                 }
 
                 return checkVat;

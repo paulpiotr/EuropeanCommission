@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using log4net;
 using NetAppCommon.Helpers.Xmls;
-using Newtonsoft.Json;
 using Vies.Core.Models;
 using Vies.Core.Services.Interface;
 using ViesServiceReference;
@@ -36,41 +35,35 @@ namespace Vies.Core.Services
                 var checkVatRequest = new checkVatRequest {countryCode = countryCode, vatNumber = vatNumber};
                 var checkVatPortTypeClient = new checkVatPortTypeClient();
                 checkVatResponse checkVatResponse = checkVatPortTypeClient.checkVat(checkVatRequest);
-                var xmlSerializer = new XmlSerializer(checkVatResponse.GetType());
-                var textWriter = new StringWriter();
-                xmlSerializer.Serialize(textWriter, checkVatResponse);
-                CheckVat checkVat = XmlHelper.DeserializeXmlFromString<CheckVat>(textWriter.ToString());
-//#if DEBUG
-//                _log4Net.Debug(JsonConvert.SerializeObject(checkVat));
-//#endif
-                return checkVat;
+                if (null != checkVatResponse)
+                {
+                    var xmlSerializer = new XmlSerializer(checkVatResponse.GetType());
+                    var textWriter = new StringWriter();
+                    xmlSerializer.Serialize(textWriter, checkVatResponse);
+                    CheckVat checkVat = XmlHelper.DeserializeXmlFromString<CheckVat>(textWriter.ToString());
+                    return checkVat;
+                }
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
 
             return null;
         }
 
         public async Task<CheckVat> CheckVatAsync(string countryCode, string vatNumber) =>
-            await Task.Run(() =>
-            {
-                return CheckVat(countryCode, vatNumber);
-            });
+            await Task.Run(() => CheckVat(countryCode, vatNumber));
 
         public CheckVatApprox CheckVatApprox(string countryCode, string vatNumber, string requesterCountryCode = null,
             string requesterVatNumber = null)
         {
             try
             {
-                //var checkVatApproxRequest = new ViesServiceReference.checkVatApproxRequest
-                //{
-                //    countryCode = countryCode,
-                //    vatNumber = vatNumber,
-                //    requesterCountryCode = requesterCountryCode,
-                //    requesterVatNumber = requesterVatNumber
-                //};
                 var checkVatApproxRequest = new checkVatApproxRequest
                 {
                     countryCode = countryCode,
@@ -81,20 +74,27 @@ namespace Vies.Core.Services
                 var checkVatPortTypeClient = new checkVatPortTypeClient();
                 checkVatApproxResponse checkVatApproxResponse =
                     checkVatPortTypeClient.checkVatApprox(checkVatApproxRequest);
-                var xmlSerializer = new XmlSerializer(checkVatApproxResponse.GetType());
-                var textWriter = new StringWriter();
-                xmlSerializer.Serialize(textWriter, checkVatApproxResponse);
-                CheckVatApprox checkVatApprox =
-                    XmlHelper.DeserializeXmlFromString<CheckVatApprox>(textWriter.ToString());
+                if (null != checkVatApproxResponse)
+                {
+                    var xmlSerializer = new XmlSerializer(checkVatApproxResponse.GetType());
+                    var textWriter = new StringWriter();
+                    xmlSerializer.Serialize(textWriter, checkVatApproxResponse);
+                    CheckVatApprox checkVatApprox =
+                        XmlHelper.DeserializeXmlFromString<CheckVatApprox>(textWriter.ToString());
 //#if DEBUG
-//                _log4Net.Debug(JsonConvert.SerializeObject(checkVatApprox));
-//                _log4Net.Debug(JsonConvert.SerializeObject(checkVatApproxResponse));
+//                    _log4Net.Debug(JsonConvert.SerializeObject(checkVatApprox));
+//                    _log4Net.Debug(JsonConvert.SerializeObject(checkVatApproxResponse));
 //#endif
-                return checkVatApprox;
+                    return checkVatApprox;
+                }
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
 
             return null;
@@ -102,10 +102,7 @@ namespace Vies.Core.Services
 
         public async Task<CheckVatApprox> CheckVatApproxAsync(string countryCode, string vatNumber,
             string requesterCountryCode = null, string requesterVatNumber = null) =>
-            await Task.Run(() =>
-            {
-                return CheckVatApprox(countryCode, vatNumber, requesterCountryCode, requesterVatNumber);
-            });
+            await Task.Run(() => CheckVatApprox(countryCode, vatNumber, requesterCountryCode, requesterVatNumber));
 
         public static ViesService GetInstance() => new();
     }

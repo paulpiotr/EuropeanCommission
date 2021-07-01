@@ -194,7 +194,6 @@ namespace Vies.Core.Models
         [Column(nameof(TraderAddress), TypeName = "varchar(256)")]
         [Display(Name = "Atrybut TraderAddress", Prompt = "Wpisz atrybut TraderAddress",
             Description = "Atrybut TraderAddress")]
-        [Required]
         [StringLength(256)]
         public string TraderAddress
         {

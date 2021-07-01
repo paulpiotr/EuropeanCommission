@@ -74,7 +74,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
         }
 
@@ -91,7 +95,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
         }
 
@@ -105,7 +113,11 @@ namespace Vies.Core.Database.Repositories
                 }
                 catch (Exception e)
                 {
-                    _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                    _log4Net.Error(e);
+                    if (null != e.InnerException)
+                    {
+                        _log4Net.Error(e.InnerException);
+                    }
                 }
 
                 return null;
@@ -129,7 +141,11 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
 
             return null;
@@ -139,30 +155,16 @@ namespace Vies.Core.Database.Repositories
         {
             try
             {
-                if (_context.CheckVatApprox.Any(w =>
-                    null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber && null != checkVat.CountryCode &&
-                    w.CountryCode == checkVat.CountryCode))
-                {
-                    CheckVatApprox checkVatWhere = _context.CheckVatApprox.FirstOrDefault(w =>
-                        null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber &&
-                        null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode);
-                    if (null != checkVatWhere)
-                    {
-                        checkVat.Id = checkVatWhere.Id;
-                        checkVat.DateOfCreate = checkVatWhere.DateOfCreate;
-                        _context.Entry(checkVatWhere).State = EntityState.Detached;
-                    }
-                }
-
-                checkVat.DateOfModification = DateTime.Now;
-                _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString()
-                    ? EntityState.Modified
-                    : EntityState.Added;
+                _context.Entry(checkVat).State = EntityState.Added;
                 _context.SaveChanges();
             }
             catch (Exception e)
             {
-                _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                _log4Net.Error(e);
+                if (null != e.InnerException)
+                {
+                    _log4Net.Error(e.InnerException);
+                }
             }
 
             return checkVat;
@@ -173,31 +175,16 @@ namespace Vies.Core.Database.Repositories
             {
                 try
                 {
-                    if (await _context.CheckVatApprox.Where(w =>
-                        null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber &&
-                        null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode).AnyAsync())
-                    {
-                        CheckVatApprox checkVatWhere = await _context.CheckVatApprox.Where(w =>
-                                null != checkVat.VatNumber && w.VatNumber == checkVat.VatNumber &&
-                                null != checkVat.CountryCode && w.CountryCode == checkVat.CountryCode)
-                            .FirstOrDefaultAsync();
-                        if (null != checkVatWhere)
-                        {
-                            checkVat.Id = checkVatWhere.Id;
-                            //checkVat.DateOfCreate = checkVatWhere.DateOfCreate;
-                            _context.Entry(checkVatWhere).State = EntityState.Detached;
-                        }
-                    }
-
-                    //checkVat.DateOfModification = DateTime.Now;
-                    _context.Entry(checkVat).State = "00000000-0000-0000-0000-000000000000" != checkVat.Id.ToString()
-                        ? EntityState.Modified
-                        : EntityState.Added;
+                    _context.Entry(checkVat).State = EntityState.Added;
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
-                    _log4Net.Error($"\n{e.GetType()}\n{e.InnerException?.GetType()}\n{e.Message}\n{e.StackTrace}\n", e);
+                    _log4Net.Error(e);
+                    if (null != e.InnerException)
+                    {
+                        _log4Net.Error(e.InnerException);
+                    }
                 }
 
                 return checkVat;
