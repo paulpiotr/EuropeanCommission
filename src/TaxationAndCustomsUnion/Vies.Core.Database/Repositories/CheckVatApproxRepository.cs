@@ -74,10 +74,10 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error(e);
+                _log4Net.Error(e.Message, e);
                 if (null != e.InnerException)
                 {
-                    _log4Net.Error(e.InnerException);
+                    _log4Net.Error(e.InnerException.Message, e.InnerException);
                 }
             }
         }
@@ -95,10 +95,10 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error(e);
+                _log4Net.Error(e.Message, e);
                 if (null != e.InnerException)
                 {
-                    _log4Net.Error(e.InnerException);
+                    _log4Net.Error(e.InnerException.Message, e.InnerException);
                 }
             }
         }
@@ -113,10 +113,10 @@ namespace Vies.Core.Database.Repositories
                 }
                 catch (Exception e)
                 {
-                    _log4Net.Error(e);
+                    _log4Net.Error(e.Message, e);
                     if (null != e.InnerException)
                     {
-                        _log4Net.Error(e.InnerException);
+                        _log4Net.Error(e.InnerException.Message, e.InnerException);
                     }
                 }
 
@@ -141,10 +141,10 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error(e);
+                _log4Net.Error(e.Message, e);
                 if (null != e.InnerException)
                 {
-                    _log4Net.Error(e.InnerException);
+                    _log4Net.Error(e.InnerException.Message, e.InnerException);
                 }
             }
 
@@ -160,10 +160,10 @@ namespace Vies.Core.Database.Repositories
             }
             catch (Exception e)
             {
-                _log4Net.Error(e);
+                _log4Net.Error(e.Message, e);
                 if (null != e.InnerException)
                 {
-                    _log4Net.Error(e.InnerException);
+                    _log4Net.Error(e.InnerException.Message, e.InnerException);
                 }
             }
 
@@ -180,10 +180,10 @@ namespace Vies.Core.Database.Repositories
                 }
                 catch (Exception e)
                 {
-                    _log4Net.Error(e);
+                    _log4Net.Error(e.Message, e);
                     if (null != e.InnerException)
                     {
-                        _log4Net.Error(e.InnerException);
+                        _log4Net.Error(e.InnerException.Message, e.InnerException);
                     }
                 }
 
